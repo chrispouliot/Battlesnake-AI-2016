@@ -39,10 +39,13 @@ def move():
 
     # TODO: Do things with data
 
-    return {
+    response = {
         'move': 'north',
-        'taunt': _get_trump_taunt()
     }
+    if data['turn'] % 4 == 0:
+        response['taunt'] = _get_trump_taunt()
+
+    return response
 
 
 @bottle.post('/end')
