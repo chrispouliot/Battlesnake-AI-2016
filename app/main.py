@@ -50,7 +50,7 @@ def move():
     if _snake_is_hungry(snake):
         gold_priority = False
 
-    move = _get_best_move(snake, gold_priority)
+    move = _get_best_move(data, snake, gold_priority)
 
     response = {
         'move': move,
@@ -70,11 +70,43 @@ def end():
 
 
 def _snake_is_hungry(snake):
-    return snake['health'] < 30
+    return snake['health'] < 101
 
 
-def _get_best_move(snake, gold_priority):
-    return 'north'
+def _get_direction_to_target(target_coords, head_position):
+    if target_coords[0] < head_position[0]:
+        move = 'east'
+    elif target_coords[0] > head_position[0]:
+        move = 'west'
+    elif target_coords[1] < head_position[1]:
+        move = 'north'
+    elif target_coords[1] > head_position[1]:
+        move = 'south'
+    return move
+
+
+def _get_best_move(data, snake, gold_priority):
+    head_position = snake['coords'][0]
+    # Priority is food
+    if not gold_priority:
+        food_coords = data['food']
+        # Find closest food. closest is coordinate list [x,y]
+        try:
+            closest = food_coords[0]
+            # Don't check the first element since that is set to closest as default
+            for food in food_coords[1:]:
+                if food[0] + food[1] < closest[0] + closest[1]:
+                    closest = food
+        except IndexError:
+            # That list of food was was less than 1 food!
+            gold_priority = True
+        else:
+            move = _get_direction_to_target(closest, head_position)
+    return move
+
+    # Priority is gold
+        # Gold exists on the board
+        # Gold does not exist on the board
 
 
 def _get_trump_taunt(snakes=None):
@@ -90,8 +122,12 @@ def _get_trump_taunt(snakes=None):
     name = random.choice(other_snakes)['name']
 
     quotes = [
-        'My net worth is many, many times that of %s' % name,
-        'I want to see %s\'s birth certificate' % name
+        'My net worth is many, many times that of %s\'s' % name,
+        'I want to see %s\'s birth certificate' % name,
+        'Did anyone notice %s was crying through my speech?' % name,
+        'Why is %s playing basketball today' % name,
+        'All of the snakes on the board flirted with me',
+        'Global warming was invented by the mongooses'
     ]
 
     return random.choice(quotes)
