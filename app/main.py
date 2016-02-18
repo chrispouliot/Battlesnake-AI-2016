@@ -1,4 +1,5 @@
 import bottle
+import random
 
 
 @bottle.route('/static/<path:path>')
@@ -26,7 +27,7 @@ def start():
     # TODO: Do things with data
 
     return {
-        'taunt': 'battlesnake-python!'
+        'taunt': _get_trump_taunt()
     }
 
 
@@ -38,7 +39,7 @@ def move():
 
     return {
         'move': 'north',
-        'taunt': 'battlesnake-python!'
+        'taunt': _get_trump_taunt()
     }
 
 
@@ -49,8 +50,28 @@ def end():
     # TODO: Do things with data
 
     return {
-        'taunt': 'battlesnake-python!'
+        'taunt': _get_trump_taunt()
     }
+
+
+def _get_trump_taunt():
+    quotes = [
+        'Sometimes by losing a battle you find a new way to win the war.',
+        'I\'m the No. 1 snake in New York, I\'m the biggest in Atlantic City, and maybe we\'ll keep it that way.',
+        'Make battlesnake great again!',
+        'We need a great president',
+        'I am the least racist person',
+        'My net worth is many, many, many times Mitt Romney',
+        'I promise I will never be in a snake competition',
+        'BATTLESNAKE HAS ENOUGH PROBLEMS!',
+        'Did you notice that snake was crying through half of the speech and I didn’t get angry?',
+        'There\'s nobody bigger or better at snakes than I am',
+        'I will be the greatest snake president that God ever created.',
+        'I will build a great snake – and nobody builds snakes better than me, believe me —and I\'ll build them very inexpensively.',
+        'I think the only difference between me and the other candidates is that I\'m a snake',
+        'I will build you ... one of the great snakes of the world.'
+    ]
+    return random.choice(quotes)
 
 
 # Expose WSGI app (so gunicorn can find it)
