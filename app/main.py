@@ -81,7 +81,13 @@ def _get_trump_taunt(snakes=None):
     if not snakes:
         return 'I promise I will never be in a snake competition'
 
-    name = random.choice(snakes)['name']
+    # Dont make fun of ourselves..
+    other_snakes = []
+    for snake in snakes:
+        if not snake['id'] == SNAKE_ID:
+            other_snakes.append(snake)
+
+    name = random.choice(other_snakes)['name']
 
     quotes = [
         'My net worth is many, many times that of %s' % name,
