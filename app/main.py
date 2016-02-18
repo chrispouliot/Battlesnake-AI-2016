@@ -2,6 +2,7 @@
 
 import bottle
 import random
+SNAKE_ID = '3d2f2b54-6c65-402f-b1ea-75b72d2ccbfb'
 
 
 @bottle.route('/static/<path:path>')
@@ -36,17 +37,24 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    snakes = data['snakes']
+    snake = None
 
-    # TODO: Do things with data
+    for snake in snakes:
+        if snake['id'] == SNAKE_ID:
+            print 'I FOUND OUR SNAKE'
+            snake = snake
 
+    # If snake is hungry, priority is food
+    # Only ever go for food or go for gold
+    gold_priority = True
+    if _snake_is_hungry(snake):
+        gold_priority = False
 
-
-    print data['snakes']
-
-
+    move = _get_best_move(snake, gold_priority)
 
     response = {
-        'move': 'north',
+        'move': move,
     }
     if data['turn'] % 4 == 0:
         response['taunt'] = _get_trump_taunt()
@@ -56,13 +64,18 @@ def move():
 
 @bottle.post('/end')
 def end():
-    data = bottle.request.json
-
-    # TODO: Do things with data
 
     return {
         'taunt': _get_trump_taunt()
     }
+
+
+def _snake_is_hungry(snake):
+    return snake['health'] < 30
+
+
+def _get_best_move(snake, gold_priority):
+    return 'north'
 
 
 def _get_trump_taunt():
