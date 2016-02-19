@@ -97,22 +97,22 @@ def _get_best_move(data, snake, gold_priority):
     # Priority is food
     if not gold_priority:
         food_coords = data['food']
-        # Find closest food. closest is coordinate list [x,y]
+        # Find closest food
         try:
             distance_x = abs(head_position[0] - food_coords[0][0])
-            distance_y = abs(head_position[0] - food_coords[0][1])
+            distance_y = abs(head_position[1] - food_coords[0][1])
             # [TOTAL_DISTANCE, COORDS]
             closest = [distance_x + distance_y, food_coords[0]]
             # Don't check the first element since that is set to closest as default
-            for food in food_coords[1:]:
-                food_distance = abs(head_position[0] - food[0]) + abs(head_position[1] - food[1])
+            for coords in food_coords[1:]:
+                food_distance = abs(head_position[0] - coords[0]) + abs(head_position[1] - coords[1])
                 if food_distance < closest[0]:
-                    closest = [food_distance, food_coords]
+                    closest = [food_distance, coords]
         except IndexError:
             # That list of food was was less than 1 food!
             gold_priority = True
         else:
-            move = _get_direction_to_target(snake, closest, head_position)
+            move = _get_direction_to_target(snake, closest[1], head_position)
     return move
 
     # Priority is gold
