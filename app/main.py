@@ -40,15 +40,16 @@ def move():
     snakes = data['snakes']
     snake = None
 
-    for a_snake in snakes:
-        if a_snake['id'] == SNAKE_ID:
-            snake = a_snake
+    for snk in snakes:
+        if snk['id'] == SNAKE_ID:
+            snake = snk
 
     # If snake is hungry, priority is food
     # Only ever go for food or go for gold
     gold_priority = True
     if _snake_is_hungry(snake):
         gold_priority = False
+
     move = _get_best_move(data, snake, gold_priority)
 
     response = {
@@ -62,7 +63,6 @@ def move():
 
 @bottle.post('/end')
 def end():
-
     return {
         'taunt': _get_trump_taunt()
     }
@@ -73,7 +73,9 @@ def _snake_is_hungry(snake):
 
 
 def get_safe_directions(data, snake):
+    # First element of snake is head
     head = snake['coords'][0]
+    # All body part coordinates of snakes, including ours, are dangerous
     dangerous_coords = []
     for snk in data['snakes']:
         for coord in snk['coords']:
@@ -81,6 +83,8 @@ def get_safe_directions(data, snake):
 
     # Add list of walls to dangerous coords
     dangerous_coords += data['walls']
+    print dangerous_coords
+    # Get board height and board width
     b_height = data['height']
     b_width = data['width']
 
@@ -90,11 +94,13 @@ def get_safe_directions(data, snake):
         'north': False,
         'south': False
     }
+    # List of possible moves
     move_west = [head[0] - 1, head[1]]
     move_east = [head[0] + 1, head[1]]
     move_north = [head[0], head[1] - 1]
     move_south = [head[0], head[1] + 1]
 
+    # Play out possible moves
     if move_west[0] >= 0 and move_west not in dangerous_coords:
         is_safe['west'] = True
     if move_north[1] >= 0 and move_north not in dangerous_coords:
@@ -110,20 +116,14 @@ def get_safe_directions(data, snake):
 def _get_direction_to_target(data, snake, target_coords, head_position):
     is_safe = get_safe_directions(data, snake)
     move = None
-    body_coord = snake['coords'][1]
-    print 'target: %s' % target_coords
-    print 'is_safe: %s' % is_safe
+
     if target_coords[0] < head_position[0] and is_safe['west']:
-        print 'GOING WEST body: %s head: %s' % (body_coord, head_position)
         move = 'west'
     if target_coords[0] > head_position[0] and is_safe['east']:
-        print 'GOING EAST body: %s head: %s' % (body_coord, head_position)
         move = 'east'
     if target_coords[1] < head_position[1] and is_safe['north']:
-        print 'GOING NORTH body: %s head: %s' % (body_coord, head_position)
         move = 'north'
     if target_coords[1] > head_position[1] and is_safe['south']:
-        print 'GOING SOUTH body: %s head: %s' % (body_coord, head_position)
         move = 'south'
     return move
 
