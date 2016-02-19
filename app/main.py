@@ -78,7 +78,9 @@ def get_safe_directions(data, snake):
     for snk in data['snakes']:
         for coord in snk['coords']:
             dangerous_coords.append(coord)
-    dangerous_coords.append(data['walls'])
+
+    # Add list of walls to dangerous coords
+    dangerous_coords += data['walls']
     b_height = data['height']
     b_width = data['width']
 
