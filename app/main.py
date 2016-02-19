@@ -81,6 +81,8 @@ def get_safe_directions(data, snake):
         for coord in snk['coords']:
             dangerous_coords.append(coord)
 
+    # Now let's add blocks around
+
     # Add list of walls to dangerous coords
     dangerous_coords += data['walls']
     print dangerous_coords
@@ -132,11 +134,11 @@ def _get_direction_to_target(data, snake, target_coords, head_position):
     print '--'
 
 
-    if target_coords[0] <= head_position[0] and is_safe['west']:
+    if target_coords[0] < head_position[0] and is_safe['west']:
         move = 'west'
     if target_coords[0] > head_position[0] and is_safe['east']:
         move = 'east'
-    if target_coords[1] <= head_position[1] and is_safe['north']:
+    if target_coords[1] < head_position[1] and is_safe['north']:
         move = 'north'
     if target_coords[1] > head_position[1] and is_safe['south']:
         move = 'south'
