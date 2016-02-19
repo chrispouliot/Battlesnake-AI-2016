@@ -177,7 +177,7 @@ def _get_best_move(data, snake, gold_priority):
     if not move:
         print 'DIDNT CHOOSE A MOVE, SO CHASING TAIL'
         # Chase tail
-        beside_tail = [snake['coords'][-1][0] + 1, snake['coords'][-1][1]]
+        beside_tail = [snake['coords'][-1][0] + 1, snake['coords'][-1][1] + 1]
         move = _get_direction_to_target(data, snake, beside_tail, head_position)
 
 
