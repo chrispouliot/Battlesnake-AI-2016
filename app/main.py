@@ -122,14 +122,16 @@ def _get_best_move(data, snake, gold_priority):
                         print 'FOUND NEW CLOSEST FOOD'
                         closest = [food_distance, coords]
             else:
-                gold_priority = True
-        except IndexError as e:
+                print 'THERE WAS NO FOOD'
+                raise Exception
+        except Exception as e:
             print e
             # That list of food was was less than 1 food!
             gold_priority = True
+
         else:
-            if not gold_priority:
-                move = _get_direction_to_target(snake, closest[1], head_position)
+            move = _get_direction_to_target(snake, closest[1], head_position)
+
 
     # Priority is gold
     if gold_priority and not no_gold:
