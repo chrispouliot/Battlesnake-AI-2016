@@ -73,7 +73,7 @@ def _snake_is_hungry(snake):
 
 
 def get_safe_directions(data, snake):
-    head = snake[0]
+    head = snake['coords'][0]
     dangerous_coords = []
     for snk in data['snakes']:
         if not snk['id'] == SNAKE_ID:
