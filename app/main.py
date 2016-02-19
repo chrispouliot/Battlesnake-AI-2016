@@ -79,15 +79,19 @@ def _get_direction_to_target(snake, target_coords, head_position):
 
     if target_coords[0] < head_position[0]:
         if not body_coord[0] < head_position[0]:
+            print 'GOING WEST body: %s head: %s' % (body_coord, head_position)
             move = 'west'
     elif target_coords[0] > head_position[0]:
         if not body_coord[0] > head_position[0]:
+            print 'GOING EAST body: %s head: %s' % (body_coord, head_position)
             move = 'east'
     elif target_coords[1] < head_position[1]:
         if not body_coord[1] < head_position[1]:
+            print 'GOING NORTH body: %s head: %s' % (body_coord, head_position)
             move = 'north'
     elif target_coords[1] > head_position[1]:
         if not body_coord[1] > head_position[1]:
+            print 'GOING SOUTH body: %s head: %s' % (body_coord, head_position)
             move = 'south'
     return move
 
