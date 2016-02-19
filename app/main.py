@@ -108,7 +108,8 @@ def _get_best_move(data, snake, gold_priority):
                 food_distance = abs(head_position[0] - coords[0]) + abs(head_position[1] - coords[1])
                 if food_distance < closest[0]:
                     closest = [food_distance, coords]
-        except IndexError:
+        except IndexError as e:
+            print e
             # That list of food was was less than 1 food!
             gold_priority = True
         else:
