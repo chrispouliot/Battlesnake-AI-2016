@@ -115,6 +115,8 @@ def _get_best_move(data, snake, gold_priority):
             # That list of food was was less than 1 food!
             gold_priority = True
         else:
+            print 'NO FOOD, GO NORTH'
+            return 'north'
             move = _get_direction_to_target(snake, closest[1], head_position)
     return move
 
