@@ -95,13 +95,13 @@ def get_safe_directions(data, snake):
     move_north = [head[0], head[1] - 1]
     move_south = [head[0], head[1] + 1]
 
-    if move_west[0] >= 0 and move_west not dangerous_coords:
+    if move_west[0] >= 0 and move_west not in dangerous_coords:
         is_safe['west'] = True
-    if move_north[1] >= 0 and move_north not dangerous_coords:
+    if move_north[1] >= 0 and move_north not in dangerous_coords:
         is_safe['north'] = True
-    if move_east[0] =< b_width and move_east not dangerous_coords:
+    if move_east[0] <= b_width and move_east not in dangerous_coords:
         is_safe['east'] = True
-    if move_south[1] =< b_height and move_south not dangerous_coords:
+    if move_south[1] <= b_height and move_south not in dangerous_coords:
         is_safe['south'] = True
 
     return is_safe
