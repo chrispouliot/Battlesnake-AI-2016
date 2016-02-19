@@ -49,7 +49,7 @@ def move():
     gold_priority = True
     if _snake_is_hungry(snake):
         gold_priority = False
-
+    print 'IN MOVE, SNAKE IS: %r' % snake
     move = _get_best_move(data, snake, gold_priority)
 
     response = {
@@ -74,6 +74,7 @@ def _snake_is_hungry(snake):
 
 
 def _get_direction_to_target(snake, target_coords, head_position):
+    print 'IN GET DIRECTION TO TARGET, SNAKE IS: %r' % snake
     move = 'north'
     body_coord = snake['coords'][1]
     print target_coords
@@ -97,6 +98,7 @@ def _get_direction_to_target(snake, target_coords, head_position):
 
 
 def _get_best_move(data, snake, gold_priority):
+    print 'IN GET BEST MOVE, SNAKE IS: %r' % snake
     head_position = snake['coords'][0]
     # Priority is food
     if not gold_priority:
