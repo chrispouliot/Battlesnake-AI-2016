@@ -80,9 +80,8 @@ def get_safe_directions(data, snake):
             for coord in snk['coords']:
                 dangerous_coords.append(coord)
     dangerous_coords.append(data['walls'])
-    print data
-    b_height = data['board']['height']
-    b_width = data['board']['width']
+    b_height = data['height']
+    b_width = data['width']
 
     is_safe = {
         'east': False,
