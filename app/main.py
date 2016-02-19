@@ -75,13 +75,13 @@ def _snake_is_hungry(snake):
 
 def _get_direction_to_target(target_coords, head_position):
     if target_coords[0] < head_position[0]:
-        move = 'east'
-    elif target_coords[0] > head_position[0]:
         move = 'west'
+    elif target_coords[0] > head_position[0]:
+        move = 'east'
     elif target_coords[1] < head_position[1]:
-        move = 'north'
-    elif target_coords[1] > head_position[1]:
         move = 'south'
+    elif target_coords[1] > head_position[1]:
+        move = 'north'
     return move
 
 
