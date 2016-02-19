@@ -116,7 +116,7 @@ def get_safe_directions(data, snake):
 def _get_direction_to_target(data, snake, target_coords, head_position):
     is_safe = get_safe_directions(data, snake)
     move = None
-
+    print is_safe
     if target_coords[0] < head_position[0] and is_safe['west']:
         move = 'west'
     if target_coords[0] > head_position[0] and is_safe['east']:
