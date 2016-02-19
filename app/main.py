@@ -99,15 +99,17 @@ def _get_best_move(data, snake, gold_priority):
         food_coords = data['food']
         # Find closest food
         try:
-            distance_x = abs(head_position[0] - food_coords[0][0])
-            distance_y = abs(head_position[1] - food_coords[0][1])
-            # [TOTAL_DISTANCE, COORDS]
-            closest = [distance_x + distance_y, food_coords[0]]
-            # Don't check the first element since that is set to closest as default
-            for coords in food_coords[1:]:
-                food_distance = abs(head_position[0] - coords[0]) + abs(head_position[1] - coords[1])
-                if food_distance < closest[0]:
-                    closest = [food_distance, coords]
+            if food_coords:
+                distance_x = abs(head_position[0] - food_coords[0][0])
+                distance_y = abs(head_position[1] - food_coords[0][1])
+                # [TOTAL_DISTANCE, COORDS]
+                closest = [distance_x + distance_y, food_coords[0]]
+                # Don't check the first element since that is set to closest as default
+                for coords in food_coords[1:]:
+                    food_distance = abs(head_position[0] - coords[0]) + abs(head_position[1] - coords[1])
+                    if food_distance < closest[0]:
+                        print 'FOUND NEW CLOSEST FOOD'
+                        closest = [food_distance, coords]
         except IndexError as e:
             print e
             # That list of food was was less than 1 food!
