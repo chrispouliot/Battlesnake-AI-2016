@@ -72,24 +72,60 @@ def _snake_is_hungry(snake):
     return snake['health'] < 25
 
 
-def _get_direction_to_target(snake, target_coords, head_position):
-    move = 'north'
+def get_safe_directions(data, snake):
+    head = snake[0]
+    dangerous_coords = []
+    for snk in data['snakes']:
+        if not snk['id'] == SNAKE_ID:
+            for coord in snk['coords']:
+                dangerous_coords.append(coord)
+    dangerous_coords.append(data['walls'])
+
+    b_height = data['board']['height']
+    b_width = data['board']['width']
+
+    is_safe = {
+        'east': False,
+        'west': False,
+        'north': False,
+        'south': False
+    }
+    move_west = [head[0] - 1, head[1]]
+    move_east = [head[0] + 1, head[1]]
+    move_north = [head[0], head[1] - 1]
+    move_south = [head[0], head[1] + 1]
+
+    if move_west[0] >= 0 and move_west not dangerous_coords:
+        is_safe['west'] = True
+    if move_north[1] >= 0 and move_north not dangerous_coords:
+        is_safe['north'] = True
+    if move_east[0] =< b_width and move_east not dangerous_coords:
+        is_safe['east'] = True
+    if move_south[1] =< b_height and move_south not dangerous_coords:
+        is_safe['south'] = True
+
+    return is_safe
+
+
+def _get_direction_to_target(data, snake, target_coords, head_position):
+    is_safe = get_safe_directions(data, snake)
+    move = None
     body_coord = snake['coords'][1]
     print target_coords
     if target_coords[0] < head_position[0]:
-        if not body_coord[0] < head_position[0]:
+        if not body_coord[0] < head_position[0] and is_safe['west']:
             print 'GOING WEST body: %s head: %s' % (body_coord, head_position)
             move = 'west'
     elif target_coords[0] > head_position[0]:
-        if not body_coord[0] > head_position[0]:
+        if not body_coord[0] > head_position[0] and is_safe['east']:
             print 'GOING EAST body: %s head: %s' % (body_coord, head_position)
             move = 'east'
     elif target_coords[1] < head_position[1]:
-        if not body_coord[1] < head_position[1]:
+        if not body_coord[1] < head_position[1] and is_safe['north']:
             print 'GOING NORTH body: %s head: %s' % (body_coord, head_position)
             move = 'north'
     elif target_coords[1] > head_position[1]:
-        if not body_coord[1] > head_position[1]:
+        if not body_coord[1] > head_position[1] and is_safe['south']:
             print 'GOING SOUTH body: %s head: %s' % (body_coord, head_position)
             move = 'south'
     return move
@@ -130,18 +166,18 @@ def _get_best_move(data, snake, gold_priority):
             gold_priority = True
 
         else:
-            move = _get_direction_to_target(snake, closest[1], head_position)
+            move = _get_direction_to_target(data, snake, closest[1], head_position)
 
 
     # Priority is gold
     if gold_priority and not no_gold:
         print 'GOING FOR GOLD!'
         gold_coord = data['gold'][0]
-        move = _get_direction_to_target(snake, gold_coord, head_position)
+        move = _get_direction_to_target(data, snake, gold_coord, head_position)
     if not move:
         print 'DIDNT CHOOSE A MOVE, SO CHASING TAIL'
         # Chase tail
-        move = _get_direction_to_target(snake, snake['coords'][-1], head_position)
+        move = _get_direction_to_target(data, snake, snake['coords'][-1], head_position)
 
 
     return move
@@ -160,6 +196,8 @@ def _get_trump_taunt(snakes=None):
     name = random.choice(other_snakes)['name']
 
     quotes = [
+        'There should be a wall here!',
+        'MAKE BATTLESNAKE GREAT AGAIN',
         'My net worth is many, many times that of %s\'s' % name,
         'I want to see %s\'s birth certificate' % name,
         'Did anyone notice %s was crying through my speech?' % name,
