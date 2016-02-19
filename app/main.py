@@ -125,6 +125,7 @@ def _get_direction_to_target(data, snake, target_coords, head_position):
         move = 'north'
     if target_coords[1] > head_position[1] and is_safe['south']:
         move = 'south'
+    print 'GOING %s' % move
     return move
 
 
