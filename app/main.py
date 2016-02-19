@@ -76,7 +76,7 @@ def _snake_is_hungry(snake):
 def _get_direction_to_target(snake, target_coords, head_position):
     move = 'north'
     body_coord = snake['coords'][1]
-
+    print target_coords
     if target_coords[0] < head_position[0]:
         if not body_coord[0] < head_position[0]:
             print 'GOING WEST body: %s head: %s' % (body_coord, head_position)
