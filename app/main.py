@@ -73,15 +73,22 @@ def _snake_is_hungry(snake):
     return snake['health'] < 101
 
 
-def _get_direction_to_target(target_coords, head_position):
+def _get_direction_to_target(snake, target_coords, head_position):
+    move = 'north'
+    body_coord = snake['coords'][1]
+
     if target_coords[0] < head_position[0]:
-        move = 'west'
+        if not body_coord[0] < head_position[0]:
+            move = 'west'
     elif target_coords[0] > head_position[0]:
-        move = 'east'
+        if not body_coord[0] > head_position[0]:
+            move = 'east'
     elif target_coords[1] < head_position[1]:
-        move = 'south'
+        if not body_coord[1] < head_position[1]:
+            move = 'south'
     elif target_coords[1] > head_position[1]:
-        move = 'north'
+        if not body_coord[1] > head_position[1]:
+            move = 'north'
     return move
 
 
@@ -92,16 +99,20 @@ def _get_best_move(data, snake, gold_priority):
         food_coords = data['food']
         # Find closest food. closest is coordinate list [x,y]
         try:
-            closest = food_coords[0]
+            distance_x = abs(head_position[0] - food_coords[0][0])
+            distance_y = abs(head_position[0] - food_coords[0][1])
+            # [TOTAL_DISTANCE, COORDS]
+            closest = [distance_x + distance_y, food_coords[0]]
             # Don't check the first element since that is set to closest as default
             for food in food_coords[1:]:
-                if food[0] + food[1] < closest[0] + closest[1]:
-                    closest = food
+                food_distance = abs(head_position[0] - food[0]) + abs(head_position[1] - food[1])
+                if food_distance < closest[0]:
+                    closest = [food_distance, food_coords]
         except IndexError:
             # That list of food was was less than 1 food!
             gold_priority = True
         else:
-            move = _get_direction_to_target(closest, head_position)
+            move = _get_direction_to_target(snake, closest, head_position)
     return move
 
     # Priority is gold
