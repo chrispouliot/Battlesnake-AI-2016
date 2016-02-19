@@ -134,7 +134,7 @@ def _get_best_move(data, snake, gold_priority):
     no_gold = False
     # Check if gold is the priority but there isn't gold on the board
     if gold_priority:
-        if not data['gold']:
+        if 'gold' not in data or not data['gold']:
             print 'Gold was priority but there was no gold, going for food'
             no_gold = True
 
