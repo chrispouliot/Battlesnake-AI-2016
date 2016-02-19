@@ -40,9 +40,9 @@ def move():
     snakes = data['snakes']
     snake = None
 
-    for snake in snakes:
-        if snake['id'] == SNAKE_ID:
-            snake = snake
+    for a_snake in snakes:
+        if a_snake['id'] == SNAKE_ID:
+            snake = a_snake
 
     # If snake is hungry, priority is food
     # Only ever go for food or go for gold
