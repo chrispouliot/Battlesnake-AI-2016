@@ -49,7 +49,6 @@ def move():
     gold_priority = True
     if _snake_is_hungry(snake):
         gold_priority = False
-    print 'IN MOVE, SNAKE IS: %r' % snake
     move = _get_best_move(data, snake, gold_priority)
 
     response = {
@@ -70,11 +69,10 @@ def end():
 
 
 def _snake_is_hungry(snake):
-    return snake['health'] < 101
+    return snake['health'] < 25
 
 
 def _get_direction_to_target(snake, target_coords, head_position):
-    print 'IN GET DIRECTION TO TARGET, SNAKE IS: %r' % snake
     move = 'north'
     body_coord = snake['coords'][1]
     print target_coords
@@ -98,10 +96,17 @@ def _get_direction_to_target(snake, target_coords, head_position):
 
 
 def _get_best_move(data, snake, gold_priority):
-    print 'IN GET BEST MOVE, SNAKE IS: %r' % snake
+    move = None
+    no_gold = False
+    # Check if gold is the priority but there isn't gold on the board
+    if gold_priority:
+        if not data['gold']:
+            print 'Gold was priority but there was no gold, going for food'
+            no_gold = True
+
     head_position = snake['coords'][0]
     # Priority is food
-    if not gold_priority:
+    if not gold_priority or no_gold:
         food_coords = data['food']
         # Find closest food
         try:
@@ -123,15 +128,21 @@ def _get_best_move(data, snake, gold_priority):
             # That list of food was was less than 1 food!
             gold_priority = True
         else:
-            if gold_priority:
-                print 'NO FOOD, GO NORTH'
-                return 'north'
-            move = _get_direction_to_target(snake, closest[1], head_position)
-    return move
+            if not gold_priority:
+                move = _get_direction_to_target(snake, closest[1], head_position)
 
     # Priority is gold
-        # Gold exists on the board
-        # Gold does not exist on the board
+    if gold_priority and not no_gold:
+        print 'GOING FOR GOLD!'
+        gold_coord = data['gold'][0]
+        move = _get_direction_to_target(snake, gold_coord, head_position)
+    if not move:
+        print 'DIDNT CHOOSE A MOVE, SO CHASING TAIL'
+        # Chase tail
+        move = _get_direction_to_target(snake, snake['coords'][-1], head_position)
+
+
+    return move
 
 
 def _get_trump_taunt(snakes=None):
