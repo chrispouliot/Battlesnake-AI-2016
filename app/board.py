@@ -104,6 +104,8 @@ class Board(object):
         head_coords = self.head_coords
         safe_coords = self.get_safe_coords()
         # target is north
+        print target
+        print head_coords
         if head_coords[1] > target[1]:
             if self.get_coords_for_direction('north') in safe_coords:
                 move = 'north'
