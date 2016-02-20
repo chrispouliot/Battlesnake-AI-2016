@@ -63,7 +63,6 @@ class Board(object):
         dangerous_coords = self.get_dangerous_coords()
 
         # Set difference!
-        print 'Get safe coords, returning %s' % list(set(all_board_coords) - set(dangerous_coords))
         return list(set(all_board_coords) - set(dangerous_coords))
 
     def get_coords_for_direction(self, direction):
@@ -113,6 +112,7 @@ class Board(object):
                 move = 'north'
             else:
                 print 'North was not safe'
+                print '%s was not in %s' % (self.get_coords_for_direction('north'), safe_coords)
         # target is south
         if head_coords[1] < target[1]:
             print 'Target is south'
@@ -120,6 +120,7 @@ class Board(object):
                 move = 'south'
             else:
                 print 'South was not safe'
+                print '%s was not in %s' % (self.get_coords_for_direction('south'), safe_coords)
         # target is east
         if head_coords[0] < target[0]:
             print 'target is east'
@@ -127,6 +128,7 @@ class Board(object):
                 move = 'east'
             else:
                 print 'east is not safe'
+                print '%s was not in %s' % (self.get_coords_for_direction('east'), safe_coords)
         # target is west
         if head_coords[0] > target[0]:
             print 'target is west'
@@ -134,6 +136,7 @@ class Board(object):
                 move = 'west'
             else:
                 print 'west is not safe'
+                print '%s was not in %s' % (self.get_coords_for_direction('west'), safe_coords)
 
         print 'Get target direction. Returning %s' % move
         return move
