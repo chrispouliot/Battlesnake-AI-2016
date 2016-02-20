@@ -71,8 +71,6 @@ class Board(object):
                     danger_rating += 1
             # This position is surrounded on atleast 2 sides, that's dangerous!
             if danger_rating >= 2:
-                print coord
-                print 'ADDING COORDINATE TO DANGER RATING, COORD IS %s' % coord
                 dangerous_coords.append(coord)
 
         print 'GET DANGEROUS COORDS, COORDS ARE %s' % dangerous_coords
