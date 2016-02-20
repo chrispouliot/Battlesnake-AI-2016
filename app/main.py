@@ -51,14 +51,11 @@ def move():
     # If priority is food but there isn't any food on board, get gold. If no gold either, just move
     if not priority == 'gold' and not board.get_coords_for_closest_food():
         if board.get_coords_for_gold():
-            print 'Priority was food, but no food so going for gold!'
             priority = 'gold'
         else:
-            print 'Priority was food, but no food or gold so wandering!'
             priority = 'wander'
 
     move = _get_best_move(board, priority)
-    print 'Moving snake! Moving %s' % move
 
     response = {
         'move': move,
@@ -86,22 +83,17 @@ def _get_direction_to_target(board, target_coords):
 
     # If we haven't chosen a move, it means there were obstacles between us and the target. Wander!
     if not move:
-        print 'No safe way forward to target, wandering!'
         move = board.get_safe_wander_direction()
 
     return move
 
 
 def _get_best_move(board, priority):
-    priority = 'asdasd'
     if priority == 'food':
-        print 'priority is food!'
         move = _get_direction_to_target(board, board.get_coords_for_closest_food())
     elif priority == 'gold':
-        print 'priority is gold!'
         move = _get_direction_to_target(board, board.get_coords_for_gold())
     else:
-        print 'priority is wander!'
         # We wander!
         move = board.get_safe_wander_direction()
 
