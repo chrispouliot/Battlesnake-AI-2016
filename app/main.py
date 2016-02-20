@@ -113,6 +113,7 @@ def _get_trump_taunt(snakes=None):
     name = random.choice(other_snakes)['name']
 
     quotes = [
+        'YOU\'RE FIRED!',
         'There should be a wall here!',
         'MAKE BATTLESNAKE GREAT AGAIN',
         'My net worth is many, many times that of %s\'s' % name,
