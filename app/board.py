@@ -73,7 +73,6 @@ class Board(object):
             if danger_rating >= 2:
                 dangerous_coords.append(coord)
 
-        print 'GET DANGEROUS COORDS, COORDS ARE %s' % dangerous_coords
         return dangerous_coords
 
     def get_safe_coords(self):
