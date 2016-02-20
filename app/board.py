@@ -18,7 +18,7 @@ class Board(object):
                 our_snake = snk
             # Add all coordinates of the snake's body parts to the list of all snake coordinates
             for coord in snk['coords']:
-                all_snake_coords.append(coord)
+                all_snake_coords.append(tuple(coord))
 
         self.our_snake = our_snake
         self.all_snake_coords = all_snake_coords
@@ -31,20 +31,21 @@ class Board(object):
         # Get the wall coordinates form the game_data key, plus all edges will be considered walls
         walls = []
         if 'walls' in game_data:
-            walls = game_data['walls']
+            for wall_coord in game_data['walls']:
+                walls.append(tuple(wall_coord))
         # Board width and board height
         b_width = game_data['width']
         b_height = game_data['height']
         for x in xrange(b_width):
             # Northern x border:
-            walls.append([-1, x])
+            walls.append((-1, x))
             # Southern x border
-            walls.append([b_height, x])
+            walls.append((b_height, x))
         for y in xrange(b_height):
             # Eastern y border:
-            walls.append([y, b_width])
+            walls.append((y, b_width))
             # Western y border:
-            walls.append([y, -1])
+            walls.append((y, -1))
         self.wall_coords = walls
         self.b_height = b_height
         self.b_width = b_width
@@ -57,12 +58,12 @@ class Board(object):
         all_board_coords = []
         for x in xrange(self.b_width):
             for y in xrange(self.b_height):
-                all_board_coords.append([x, y])
+                all_board_coords.append((x, y))
 
         dangerous_coords = self.get_dangerous_coords()
 
-        # Magic exclusivity! Yay python
-        return all_board_coords - dangerous_coords
+        # Set difference!
+        return list(set(all_board_coords) - set(dangerous_coords))
 
     def get_coords_for_direction(self, direction):
         '''
@@ -91,7 +92,7 @@ class Board(object):
         ]
         move = 'north'
         for direction in directions:
-            coords_for_move = board.get_coords_for_direction(direction)
+            coords_for_move = self.get_coords_for_direction(direction)
             if coords_for_move in safe_coords:
                 move = direction
 
