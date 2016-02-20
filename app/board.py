@@ -72,13 +72,13 @@ class Board(object):
         head = self.head_coords
         coords = None
         if direction == 'north':
-            coords = [head[0], head[1] - 1]
+            coords = (head[0], head[1] - 1)
         elif direction == 'south':
-            coords = [head[0], head[1] + 1]
+            coords = (head[0], head[1] + 1)
         elif direction == 'east':
-            coords = [head[0] + 1, head[1]]
+            coords = (head[0] + 1, head[1])
         elif direction == 'west':
-            coords = [head[0] - 1, head[1]]
+            coords = (head[0] - 1, head[1])
         print 'Get coords for direction. Direction was %s, coords are %s' % (direction, coords)
         return coords
 
