@@ -62,15 +62,14 @@ class Board(object):
         dangerous_coords = self.wall_coords + self.all_snake_coords
         # Any safe coordinate that is surrounded on more than two sides is considered dangerous
         all_board_coords = self._get_all_board_coords()
-        #print list(set(all_board_coords) - set(dangerous_coords))
         for coord in list(set(all_board_coords) - set(dangerous_coords)):
             danger_rating = 0
             for direction in self.DIRECTIONS:
                 coord_for_move = self._get_coords_for_direction(direction, coord)
                 if coord_for_move in dangerous_coords:
                     danger_rating += 1
-            # This position is surrounded on atleast 2 sides, that's dangerous!
-            if danger_rating >= 2:
+            # This position is surrounded on atleast 3 sides, that's dangerous!
+            if danger_rating >= 3:
                 dangerous_coords.append(coord)
 
         return dangerous_coords
