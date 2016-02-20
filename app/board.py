@@ -59,7 +59,7 @@ class Board(object):
             for y in xrange(self.b_height):
                 all_board_coords.append([x, y])
 
-        dangerous_coords = self.get_dangerous_coords
+        dangerous_coords = self.get_dangerous_coords()
 
         # Magic exclusivity! Yay python
         return all_board_coords - dangerous_coords
