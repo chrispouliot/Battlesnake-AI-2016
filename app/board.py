@@ -66,7 +66,8 @@ class Board(object):
             danger_rating = 0
             for direction in self.DIRECTIONS:
                 coord_for_move = self._get_coords_for_direction(direction, coord)
-                if coord_for_move in dangerous_coords:
+                # Not dangerous if the coord_for_move is our own head
+                if coord_for_move in dangerous_coords and coord_for_move not in self.head_coords:
                     danger_rating += 1
             # This position is surrounded on atleast 3 sides, that's dangerous!
             if danger_rating >= 3:
