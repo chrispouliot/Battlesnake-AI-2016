@@ -156,7 +156,7 @@ class Board(object):
                 closest['distance'] = food_distance
                 closest['coords'] = coords
 
-        print 'Get coords for closest food. Returning %s' % closest[coords]
+        print 'Get coords for closest food. Returning %s' % closest['coords']
         return closest['coords']
 
     def get_coords_for_gold(self):
