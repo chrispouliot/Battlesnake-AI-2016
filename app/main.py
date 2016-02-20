@@ -2,6 +2,7 @@
 
 import bottle
 import random
+from board import Board
 SNAKE_ID = '3d2f2b54-6c65-402f-b1ea-75b72d2ccbfb'
 
 
@@ -25,10 +26,6 @@ def index():
 
 @bottle.post('/start')
 def start():
-    data = bottle.request.json
-
-    # TODO: Do things with data
-
     return {
         'taunt': _get_trump_taunt()
     }
@@ -44,13 +41,24 @@ def move():
         if snk['id'] == SNAKE_ID:
             snake = snk
 
-    # If snake is hungry, priority is food
+    board = Board(data)
+    # If snake is hungry, priority is food. If no gold on board, go for food.
     # Only ever go for food or go for gold
-    gold_priority = True
-    if _snake_is_hungry(snake):
-        gold_priority = False
+    priority = 'gold'
+    if _snake_is_hungry(snake) or not board.get_coords_for_gold():
+        print 'Priority is food!'
+        priority = 'food'
+    # If priority is food but there isn't any food on board, get gold. If no gold either, just move
+    if not priority == 'gold' and not board.get_coords_for_closest_food():
+        if board.get_coords_for_gold():
+            print 'Priority was food, but no food so going for gold!'
+            priority = 'gold'
+        else:
+            print 'Priority was food, but no food or gold so wandering!'
+            priority = 'wander'
 
-    move = _get_best_move(data, snake, gold_priority)
+    move = _get_best_move(board, priority)
+    print 'Moving snake! Moving %s' % move
 
     response = {
         'move': move,
@@ -72,129 +80,29 @@ def _snake_is_hungry(snake):
     return snake['health'] < 25
 
 
-def get_safe_directions(data, snake):
-    # First element of snake is head
-    head = snake['coords'][0]
-    # All body part coordinates of snakes, including ours, are dangerous
-    dangerous_coords = []
-    for snk in data['snakes']:
-        for coord in snk['coords']:
-            dangerous_coords.append(coord)
+def _get_direction_to_target(board, target_coords):
+    # Get direction to target. Will return None if no safe block forward to target
+    move = board.get_target_direction(target_coords)
 
-    # Now let's add blocks around
+    # If we haven't chosen a move, it means there were obstacles between us and the target. Wander!
+    if not move:
+        print 'No safe way forward to target, wandering!'
+        move = board.get_safe_wander_direction()
 
-    # Add list of walls to dangerous coords
-    dangerous_coords += data['walls']
-    print dangerous_coords
-    # Get board height and board width
-    b_height = data['height']
-    b_width = data['width']
-
-    is_safe = {
-        'east': False,
-        'west': False,
-        'north': False,
-        'south': False
-    }
-    # List of possible moves
-    move_west = [head[0] - 1, head[1]]
-    move_east = [head[0] + 1, head[1]]
-    move_north = [head[0], head[1] - 1]
-    move_south = [head[0], head[1] + 1]
-
-    # Play out possible moves
-    if move_west[0] >= 0 and move_west not in dangerous_coords:
-        is_safe['west'] = True
-    if move_north[1] >= 0 and move_north not in dangerous_coords:
-        is_safe['north'] = True
-    if move_east[0] <= b_width and move_east not in dangerous_coords:
-        is_safe['east'] = True
-    if move_south[1] <= b_height and move_south not in dangerous_coords:
-        is_safe['south'] = True
-
-    return is_safe
-
-
-def _get_direction_to_target(data, snake, target_coords, head_position):
-    is_safe = get_safe_directions(data, snake)
-    move = None
-    print is_safe
-    print 'safe coords ^^ ----'
-    print target_coords
-
-    print 'is safe west %s' % is_safe['west']
-    print 'is safe east %s' % is_safe['east']
-    print 'is safe north %s' % is_safe['north']
-    print 'is safe south %s' % is_safe['south']
-    print '--'
-    print 'target_coords[0] < head_position[0] %s' % target_coords[0] < head_position[0]
-    print 'target_coords[0] > head_position[0] %s' % target_coords[0] > head_position[0]
-    print 'target_coords[1] < head_position[1] %s' % target_coords[1] < head_position[1]
-    print 'target_coords[1] > head_position[1] %s' % target_coords[1] > head_position[1]
-    print '--'
-
-
-    if target_coords[0] < head_position[0] and is_safe['west']:
-        move = 'west'
-    if target_coords[0] > head_position[0] and is_safe['east']:
-        move = 'east'
-    if target_coords[1] < head_position[1] and is_safe['north']:
-        move = 'north'
-    if target_coords[1] > head_position[1] and is_safe['south']:
-        move = 'south'
-    print 'GOING %s' % move
     return move
 
 
-def _get_best_move(data, snake, gold_priority):
-    move = None
-    no_gold = False
-    # Check if gold is the priority but there isn't gold on the board
-    if gold_priority:
-        if 'gold' not in data or not data['gold']:
-            print 'Gold was priority but there was no gold, going for food'
-            no_gold = True
-
-    head_position = snake['coords'][0]
-    # Priority is food
-    if not gold_priority or no_gold:
-        food_coords = data['food']
-        # Find closest food
-        try:
-            if food_coords:
-                distance_x = abs(head_position[0] - food_coords[0][0])
-                distance_y = abs(head_position[1] - food_coords[0][1])
-                # [TOTAL_DISTANCE, COORDS]
-                closest = [distance_x + distance_y, food_coords[0]]
-                # Don't check the first element since that is set to closest as default
-                for coords in food_coords[1:]:
-                    food_distance = abs(head_position[0] - coords[0]) + abs(head_position[1] - coords[1])
-                    if food_distance < closest[0]:
-                        print 'FOUND NEW CLOSEST FOOD'
-                        closest = [food_distance, coords]
-            else:
-                print 'THERE WAS NO FOOD'
-                raise Exception
-        except Exception as e:
-            print e
-            # That list of food was was less than 1 food!
-            gold_priority = True
-
-        else:
-            move = _get_direction_to_target(data, snake, closest[1], head_position)
-
-
-    # Priority is gold
-    if gold_priority and not no_gold:
-        print 'GOING FOR GOLD!'
-        gold_coord = data['gold'][0]
-        move = _get_direction_to_target(data, snake, gold_coord, head_position)
-    if not move:
-        print 'DIDNT CHOOSE A MOVE, SO CHASING TAIL'
-        # Chase tail
-        beside_tail = [snake['coords'][-1][0] + 1, snake['coords'][-1][1] + 1]
-        move = _get_direction_to_target(data, snake, beside_tail, head_position)
-
+def _get_best_move(board, priority):
+    if priority == 'food':
+        print 'priority is food!'
+        move = _get_direction_to_target(board, board.get_coords_for_closest_food())
+    elif priority == 'gold':
+        print 'priority is gold!'
+        move = _get_direction_to_target(board, board.get_coords_for_gold())
+    else:
+        print 'priority is wander!'
+        # We wander!
+        move = board.get_safe_wander_direction()
 
     return move
 
