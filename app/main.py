@@ -93,6 +93,7 @@ def _get_direction_to_target(board, target_coords):
 
 
 def _get_best_move(board, priority):
+    priority = 'asdasd'
     if priority == 'food':
         print 'priority is food!'
         move = _get_direction_to_target(board, board.get_coords_for_closest_food())
