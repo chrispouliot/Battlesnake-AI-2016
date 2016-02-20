@@ -26,7 +26,7 @@ class Board(object):
         self.head_coords = our_snake['coords'][0]
         # Check if this is advanced mode and gold is included
         if 'gold' in game_data:
-            self.gold_coords = game_data['gold']
+            self.gold_coords = game_data['gold'][0]
 
         # Get the wall coordinates form the game_data key, plus all edges will be considered walls
         walls = []
