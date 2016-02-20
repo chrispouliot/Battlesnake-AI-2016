@@ -99,7 +99,7 @@ class Board(object):
         if start_pos:
             start = start_pos
         else:
-            start = self.head
+            start = self.head_coords
 
         coords = None
         if direction == 'north':
